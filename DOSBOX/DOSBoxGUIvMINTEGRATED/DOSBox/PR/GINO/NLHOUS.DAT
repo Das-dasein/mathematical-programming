@@ -1,0 +1,14 @@
+! A model of a home mortgage.
+    MODEL:
+! The formula for the present value of a stream of payments:
+       2) P = A * ( 1 - ( 1 + I ) ^ ( - N ) ) / I ;
+! The monthly payment:
+       3) A = 100 ;
+! The monthly interest rate:
+       4) I = .13/12 ;
+! The number of periods:
+       5) N = 29 * 12;
+    END
+
+
+

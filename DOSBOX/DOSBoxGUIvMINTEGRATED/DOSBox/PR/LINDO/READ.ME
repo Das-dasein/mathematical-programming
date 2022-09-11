@@ -1,0 +1,272 @@
+
+                              Getting Started with LINDO
+
+          Enclosed  is  a  copy of LINDO for 386, 486 and Pentium DOS based
+          PCs.
+
+          Before using LINDO, make a backup copy of the LINDO disk  and put
+          it away for safekeeping.  Next, you will want to install LINDO by
+          copying  all  the  LINDO files to your hard disk.   To  do  this,
+          create a separate subdirectory for LINDO.  This is done by giving
+          the following DOS commands:
+
+                  CD \                            (go to root directory)
+                  MD LINDO                        (make a subdirectory
+                                                   called LINDO)
+                  CD LINDO                        (and make it the default)
+
+          To  copy  the  LINDO files into the subdirectory, place the LINDO
+          diskette in drive A: and give the DOS command:
+
+                  COPY A:*.*
+
+          The LINDO files must next be uncompressed by typing:
+
+                  LHA X LINDO
+
+          This  step  uses  the  LHA  compression  utility  (Copyright  (C)
+          Haruyasu Yoshizaki,  1988-1991).  For more information on the use
+          of  this  utility,   please   refer  to  the  files  LHA.HLP  and
+          LHA213.DOC.
+
+          You may now run LINDO by simply typing LINDO at the DOS prompt.
+
+          For  a  quick test you might want to read in one  of  the  sample
+          programs on the system disk. Giving the LINDO command:
+
+                  TAKE TEST1.DAT
+
+          will read in a small staff scheduling model.
+
+          The maximum size problem LINDO can handle depends on the version.
+          Specifically, the limits are as follows:
+
+            Version        Max Rows   Max Cols   Min Memory Reqd
+                 Regular      100        200          2Mb
+                 Super        500       1000          2Mb
+                 Hyper       2000       4000          3Mb
+                 Industrial  8000      16000          5Mb
+                 Extended   32000     100000         16Mb
+
+          Slack variables must also be counted against the maximum variable
+          limit.
+
+          LINDO also needs enough nonzero  space  to  store  the structural
+          nonzero coefficients of your model and the basis inverse.  If you
+
+          run out of nonzero space, you can increase it by creating  a file
+          called LINDO.CNF in the same  directory  in  which  you installed
+          LINDO.  Place a  line  in this file that reads "MAXNZ=nnn", where
+          nnn  is the maximum number of nonzeros that  you  want  LINDO  to
+          allocate.  LINDO will  attempt  to allocate up to the full number
+          of  requested   nonzeros.    If  memory  is  limited,  a  smaller
+          allocation may be  used.   For reference, each additional nonzero
+          requires 8 bytes of memory to store.  To determine the  number of
+          nonzeros allocated by LINDO, use the HELP command.
+
+          LINDO can allocate nonzeros beyond available  memory  through the
+          use of virtual memory.  In order to accomplish this you  must run
+          LINDO from a DOS  box  in Windows, and you must configure Windows
+          to use a swap file.  Windows can be configured to use a swap file
+          using the Windows  "Control  Panel" software.  Be aware, however,
+          that the use of virtual memory can dramatically increase solution
+          times.
+
+          This  version  of  LINDO does not require an 80X87 floating point
+          coprocessor, although we strongly recommend  that  you  have one.
+          Running without a coprocessor can  slow solution times by as much
+          as a factor of 20!  Users of 486DX and  Pentium  based PCs should
+          note  that  the  main  processor  includes  the   floating  point
+          capability as a  standard  feature.  Thus, a separate coprocessor
+          is  not  required.  486SX users should  verify  if  they  have  a
+          coprocessor on board.
+
+          PRINTING LINDO OUTPUT:
+
+          LINDO output may be sent to the printer  using  several different
+          techniques:
+
+            1.  Simultaneously  holding  down the Shift  and  PrtSc  (print
+                screen) keys  will cause the contents of the current screen
+                to be sent to the printer.
+
+            2.  Simultaneously holding down the  Ctrl  (control)  and PrtSc
+                keys will cause all subsequent  screen output to be sent to
+                the printer as well as the screen. Pressing Ctrl-PrtSc once
+                more will stop printing.
+
+            3.  The LINDO command  DIVERT  PRN sends all high volume output
+                (e.g., solution reports and  formulations)  to  the printer
+                rather than to the screen. Give the RVRT  command  to cause
+                output to revert to the screen.
+
+            4.  You may also use the DIVERT command to send LINDO output to
+                a  file.  Do  this  by  giving  the  LINDO  command  DIVERT
+                <filename>, where <filename> is any  valid  DOS  file name.
+                You may then exit LINDO and edit this file  with  any  text
+                editor, and print it with the DOS PRINT command.
+
+                                        - 2 -
+
+          Note: You should not print the LINDO files created with  the SAVE
+          command.  If  you  want  to  print  your  formulation,  type  the
+          following:
+
+                          DIVERT PRN
+                          LOOK ALL
+                          RVRT
+
+
+          NEW FEATURE(S):
+
+          LINDO can display a status  box during optimization.  This status
+          box gives information on the progress of the optimizer.   The box
+          is updated about every  two  seconds.  Use the escape key (<Esc>)
+          to toggle the status box on and off.
+
+          You  may also interrupt the optimizer by  pressing  the  end  key
+          (<End>).  LINDO will ask how  many  more pivots you would like to
+          do  once  the  end  key  has been pressed. To stop  optimization,
+          respond by entering  0.    LINDO  will then return to the command
+          level with the best solution found.
+
+                                        - - -
+
+          LINDO provides on-line help capabilities for  all  commands. Help
+          may be obtained by  typing  HELP or COMMANDS to the LINDO prompt.
+          Thank you very much for your interest in LINDO. If  you encounter
+          problems, please  document  them  as  thoroughly  as  possible by
+          putting all the relevant data on a diskette and sending it to:
+
+                                 LINDO Systems, Inc.
+                                  P.O. Box 148231
+                                 Chicago, IL 60614
+                                    312/871-2524
+                           Technical Support: 312/248-0465
+                               e-mail: LINDO@lindo.com
+
+                                        - 3 -
+
+                              LINDO Linking Instructions
+
+          This section is only of interest if you want to  make  use of the
+          LINDO callable library in programs of your own design.
+
+          LINDO  has  a  number of internal subroutines that you may access
+          through  a   FORTRAN  or  C  program  to  create  custom  turnkey
+          applications, matrix generators, and report writers.  For details
+          on  available  subroutine  calls, see chapter 14  of  the  User's
+          Manual.
+
+          LINDO is written primarily in  FORTRAN with a touch of Assembler.
+          The FORTRAN source was  compiled  with  Watcom's  F77/386 FORTRAN
+          compiler, version 9.5. Thus, you will need the libraries supplied
+          with Watcom FORTRAN to create your custom versions  of  LINDO. We
+          also suggest  that  you  produce  your  interface  routines using
+          Watcom FORTRAN. (If you wish, you may also use Watcom C  which is
+          compatible with NDP FORTRAN.) For sales  information,  Watcom may
+          be  reached  at  519/886-3700.  Watcom comes  with  a  restricted
+          version of Rational Systems DOS/4G DOS extender.  You may choose,
+          however, to use the 80386  Software Development Kit from Phar Lap
+          Software (617/661-1510) in  place  of  the  Rational  Systems DOS
+          extender.
+
+          The LINDO/386 files you will  use to implement a USER application
+          are listed below:
+
+                  LINDO.FOR       Source for the LINDO main program
+                  LINDO.OBJ       Object code of LINDO.FOR
+                  BLOCK.OBJ       Object code for LINDO's Block Data
+                  PHARLAP.OBJ     Object code for use with Phar Lap DOSX
+                  LINDO.LIB       LINDO object code library
+                  LINK.LNK        Sample command file for linking
+
+
+          The following  listing  of  the  link  instruction  file LINK.LNK
+          illustrates  the commands one might give  to  WLINK,  the  Watcom
+          linker, to create a custom copy of LINDO:
+
+            LIBPATH \WATCOM\LIB386;\WATCOM\LIB386\DOS     (point to libraries)
+            FILE LINDO                    (link in the LINDO main program)
+            FILE BLOCK                    (link in LINDO's BLOCK DATA)
+            FILE PHARLAP                  (used with the Phar Lap DOSX)
+            LIB LINDO                     (the LINDO library routines)
+            NAME MYLINDO                  (the name of the executable)
+            FORMAT PHARLAP EXTENDED       (create an EXE for Phar Lap)
+
+          The  above assumes that you are binding with  the  Phar  Lap  DOS
+          extender.  This will give you the most complete version of LINDO,
+          including the full  screen  edit capability and the pop-up status
+          window during optimization.  If you do not have Phar Lap, you can
+          link with Rational  Systems'  DOS extender which is included with
+          Watcom.  The LINK command file in this case should be:
+                                        - 4 -
+            LIBPATH \WATCOM\LIB386;\WATCOM\LIB386\DOS
+            FILE LINDO
+            FILE BLOCK
+            LIB LINDO
+            NAME MYLINDO
+
+
+          We  have  also  assumed that you have installed Watcom FORTRAN in
+          the Watcom subdirectory, and that you have all the LINDO files in
+          the default directory. In  actuality,  you  will probably have to
+          edit the LINK command file  in a straightforward manner to tailor
+          it for your system.   Once  you  have  done  this,  give  the DOS
+          command:
+
+                          WLINK @LINK.LNK
+
+          to link LINDO.  To run the program, type either,
+
+                          RUN386 MYLINDO
+
+          if using the Phar Lap DOS extender, or,
+
+                          MYLINDO
+
+          if using  the default Rational Systems DOS extender provided with
+          Watcom FORTRAN.
+
+          You  may  link  in  your  own  versions  of  the  USER and  NEWIP
+          subroutines. Alternatively, if  you  do  not  supply  versions of
+          these routines, the Linker will install dummy  versions contained
+          in  the  LINDO  library.  In  which  case,  the  result will be a
+          standard version of LINDO.    You may also replace the LINDO main
+          program with your own version if you prefer your  program  to  be
+          the "boss".
+
+          We  have  included  a  small  matrix  generator  for the  classic
+          transportation problem.  The  file  containing  the  generator is
+          named TRAN.FOR.  You  can  use  the  following command to compile
+          this file:
+
+                  WFC386 /P /3 /OP /CC /FPI tran.for
+
+          You  can then link it to LINDO by adding it to the list of  files
+          in  your  link  command  file   (LINK.LNK).      To   invoke  the
+          transportation generator within  LINDO, issue the "USER" command.
+          The generator will then prompt you for the required data.
+
+          Refer to chapter  14  of  the  LINDO User's Manual for a complete
+          description of the LINDO subroutine calls  available  through the
+          USER  Interface.  Integer subroutine arguments  passed  to  LINDO
+          routines should be of the four byte variety (INTEGER*4). Floating
+          point arguments must all be single precision (REAL*4).
+                                        - 5 -
+          A LINDO test script (TTYLP.DAT) has also been enclosed as a means
+          of testing your  customized  LINDO programs. Use the TAKE command
+          to read the test  file.  The test script will display the correct
+          answers,  allowing you to verify LINDO's  results.    TTYLP  also
+          makes  use of the test MPS file LPMPS1, so please make sure it is
+          present in the default directory.
+
+          Finally, any  program you create containing the LINDO object code
+          falls  under  the  standard License Agreement.  Thus, you may not
+          redistribute such programs  in  any  form.   If you have a single
+          user license for LINDO, you may use LINDO  on  no  more  than one
+          machine at one time.  This convention also applies to  the custom
+          versions of LINDO you create.  If you would  like  to  distribute
+          your application,  please  talk  to  us  about  runtime licensing
+          options.
+                                        - 6 -

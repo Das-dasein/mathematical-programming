@@ -1,0 +1,41 @@
+!  A Newsboy inventory model.
+MODEL
+!    The setup cost:
+  K = 1.5;
+!    The holding cost:
+  H = 1;
+!    The shortage penalty cost:
+  PI = 9;
+!    The mean demand per period:
+  MU = 16;
+!    The standard deviation in lead time demand:
+  SIG = 7;
+!    The purchase cost per unit:
+  C = 2;
+!    We want to determine:
+!      SB = the order up to level
+!      SL = the reorder point.
+!    Here is the cost expression which is to be minimized:
+  MIN =
+!    The purchase cost:
+  C * SB +
+!    The expected holding and penalty cost if we order up to SB:
+  HPSB;
+! Here is how HPSB is caluculated:
+  HPSB = H * ( SB - MU) + ( PI + H)* SIG *
+!    The next term is the standard normal right tail loss:
+!       ( PSN( UB) = Prob{ standard normal r. v. <= UB } )
+  ( .39894228* EXP(- UB* UB/2) - UB * ( 1 - PSN( UB))) ;
+!    The order up to point in standardized form:
+  UB = ( SB - MU)/ SIG;
+!    At the reorder point the cost of bringing up to SB should be
+!    the same as staying put:
+  K + C*( SB - SL) + HPSB = H*( SL - MU) + ( PI + H)* SIG
+  *( .39894228* EXP(- UL* UL/2) - UL * ( 1 - PSN( UL))) ;
+   UL = ( SL - MU)/ SIG;
+!    We want the solution for which SL < SB:
+  SL < SB;
+!    It would be nice to know the order size:
+  Q = SB - SL;
+END
+

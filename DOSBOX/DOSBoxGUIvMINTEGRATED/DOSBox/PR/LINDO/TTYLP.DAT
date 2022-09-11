@@ -1,0 +1,970 @@
+! THIS IS A LINDO TEST SCRIPT FILE.
+! ASSUMING IT IS CALLED TSTS1.DAT, THEN IT
+! CAN BE RUN IN LINDO BY TYPING(WITHOUT THE !):
+!   TAKE
+!   TSTS1.DAT
+!  THE BATCH COMMAND ECHOES ALL FILE INPUT TO THE TERMINAL
+BATCH
+!
+!  THIS FILE EXERCISES VARIOUS LINDO COMMANDS
+VERBOSE    ! MAKE SURE WE ARE IN VERBOSE MODE
+!  Check simple commands like LOCAL
+local
+pause  Hit CR/Enter
+MAX 2FRED + 3CHUK ST 4FRED +7CHUK<11
+5FRED +2CHUK<7 END
+LOOK ALL
+ALTER
+3
+CHUK
+4
+LOOK 3
+ALTER
+3
+RHS
+9
+ALTER
+2
+DIR
+>
+LOOK 2
+ALTER
+1
+DIR
+MIN
+ALTER 2 NAME
+ROWTWO
+LOOK ALL
+ PAUSE THE NAME OF ROW 2 SHOULD BE ROWTWO
+GO
+! THE SOLUTION SHOULD BE 4.71428573 
+NO
+PAUSE  HIT CR
+!  Test error handling when we alter direction
+alter 3 dir
+junk   ! Give it junk the first time, see if it recovers
+>
+
+terse
+go
+! The answer should have been 5.00
+pause HIT CR
+TERSE
+!
+! Test free form input error handling
+Max 20a 
++30c
+st
+a< TRASH
+60
+  - 1 c JUNK
+  > - 50
+a + - 2c
+2
+c < 120 end
+!
+Terse
+!
+!
+go
+! The objective should be 2100.
+PAUSE  HIT CR
+!
+LOOK ALL
+! Test alter some more
+alter
+1
+c
+39
+!  Try an ALTER that fails:
+ ALTER 1 C
+-
+JUNK
+ 
+TERSE
+GO
+!
+! The answer should be  2370
+PAUSE HIT CR
+! Test APPCOL
+APPC
+qusi
+1 60
+2 1
+4 3
+0 0
+go
+! The answer should be 2400
+PAUSE  HIT CR
+solu
+! Use ALTER to delete variable A
+alter 1 a
+0
+alter 2 a
+0
+alter 4 a
+0
+go
+!  The answer should be 2400.
+PAUSE  HIT CR
+look all
+!
+!
+TABLO
+!
+! A trashy objective followed by blank lines should be OK
+MAX TRASH, GARBAGE, DETRITUS, ETC.
+
+
+
+Pause  It should have said UGH and given up; HIT CR
+!terse
+! This tests whether tabs are handled OK
+  	max	2	a	+	3	c
+	st	a	<	60	-	c	>
+	-	50
+   -	a	 - 	2	c	> 	-	120	
+end
+go
+nonz
+pause  The soln should be 210 (Hit CR)
+stats
+pause  We should have VARS=  2 (Hit CR)
+!
+! A formulation in which the same variable appears several
+! times in the same row.
+max 3.1x - 3.1x + y + 2z
+st
+4y + 3z - 3y < 10
+end
+! Variable X should not appear
+look all
+PAUSE HIT CR
+go
+! The solution should have been 10
+pause HIT CR
+max 20a + z st a < 40 end
+! Test the EXTEND command
+extend
+z-30c = 0
+c < 50
+a+2c < 90 end
+go
+solu
+!  The solution should have been 1550
+PAUSE  HIT CR
+!  We should be able to handle a problem with no constraints:
+      max 20 xxxx + 30 yyyy st end
+VERBOSE
+   go
+!  It should have been unbounded
+Pause HIT CR
+!  If we say GO again, it should still be unbounded
+   go
+Pause HIT CR
+TERSE
+! Make it bounded
+sub xxxx 10
+sub yyyy 10
+go
+!  The objective should have been 500
+PAUSE  HIT CR
+!
+! TRY THE PROTRAC PROBLEM OF EPPEN AND GOULD
+!  TURN OFF THE ECHO TOGGLE
+BATCH
+ MAX     29970 P1T1 + 29970 P1T2 +
+         29910 P2T1 + 29910 P2T2
+      - 1000 I1T1 - 1000 I1T2 - 1000 I2T1 - 1000 I2T2
+      - 1200 E1T1 - 1200 E1T2 - 1200 E2T1 - 1200 E2T2
+      - 20 C1T1 - 20 C1T2 - 20 C2T1 - 20 C2T2
+      - 3000 NDT1 - 3000 NDT2 -
+ 20 R1T1 - 20 R1T2      - 20 R2T1 - 20 R2T2
+ - 300 N1T1 - 300 N1T2      - 300 N2T1 - 300 N2T2
+ SUBJECT TO
+    2)     P1T1 +  P2T1 -  NDT1 =    130
+    3)     P1T2 +  P2T2 -  NDT2 =    190
+    4)    900 B1T1 + 90 T1T1 <=   80000
+    5)    900 B1T2 + 90 T1T2 <=   80000
+    6)    600 B2T1 + 60 T2T1 <=   70000
+    7)    600 B2T2 + 60 T2T2 <=   70000
+    8)     I1T1 +  I2T1 <=   1000
+    9)     I1T2 +  I2T2 <=   1000
+   10)  -  I1T1 -  E1T1 + 6 B1T1 =    0
+   11)  -  I2T1 -  E2T1 + 6 B2T1 =    0
+   12)  -  I1T2 -  E1T2 + 6 B1T2 =    0
+   13)  -  I2T2 -  E2T2 + 6 B2T2 =    0
+   14)     P1T1 -  B1T1 +  N1T1 =    5
+   15)     P1T2 -  B1T2 -  N1T1 +  N1T2 =    0
+   16)     P2T1 -  B2T1 +  N2T1 =    2
+   17)     P2T2 -  B2T2 -  N2T1 +  N2T2 =    0
+   18)     C1T1 +  R1T1 +  B1T1 -  T1T1 =    6
+   19)     C1T2 -  C2T1 -  R1T1 +  R1T2 +  B1T2
+      -  T1T2 =    0
+   20)     C2T1 +  R2T1 +  B2T1 -  T2T1 =    4
+   21)  -  C1T1 +  C2T2 -  R2T1 +  R2T2 +  B2T2
+      -  T2T2 =    0
+ END  
+TERSE
+!  TURN BATCH TOGGLE BACK ON
+BATCH
+!  A BPIC command should generate a message that we need
+!   to invert first.
+BPIC
+!
+PAUSE HIT CR
+!
+GO
+! THE ANSWER SHOULD BE 8942181.
+PAUSE  HIT CR
+! Test parametrics
+PARA
+6
+0.0
+!  The successive rhs values should have been
+!  58133.3, 56066.7,  29313.3
+!
+PAUSE  HIT CR
+PICTURE
+!
+INVERT
+BPICTURE
+!
+PAUSE HIT CR
+! Reoptimize...
+go
+!
+! Test CPRI 
+cpri  n p d L : n = 'i%%%'
+!
+! Test RPRI
+rpri n p d t : d > 1
+!
+! Test APPC
+appc junk
+2 1
+3 -1
+4 +1
+5 -  2
+6 + 2
+0 0
+go
+! The answer should be 8942180.5
+shocol junk
+!  Try SDBC
+sdbc JUNK
+!  Try RDBC
+rdbc JUNK
+go
+! It should have taken only a pivot or two to get optimal.
+PAUSE  HIT CR
+! Try PUNCH and INSERT
+fpun JUNK
+save JUNK1
+retr JUNK1
+fins JUNK
+terse
+go
+! It should have needed at most one pivot to get optimal
+pause HIT CR
+!  Test FREE command
+FREE T2T2
+GO
+! The answer should have been 8942180.5
+PAUSE HIT CR
+!
+   min x st x > 1 x>2 x>3 x>4 x>5 x>6 x>7 end
+go
+! It should have found the optimum in only 1 pivot
+pause HIT CR
+!
+!  Try a problem with a free variable
+ MAX     X + Y + Z
+ SUBJECT TO
+        2)   4 X - Y - Z =    6
+        3)   2 X + 3 Y + 4 Z =  - 5
+        4)   X - 4 Y - 2 Z =    7
+ END
+ FREE Z
+ FREE Y
+terse
+go
+!  The objective should have been - 1
+pause HIT CR
+!  Try some more parametrics
+ MAX  12.5 X1+ 11.3 X2+ 17.2 X3+ 19.9 X4- 0.14 WM- 0.29 WP
+ SUBJECT TO
+  0.82 X1+ 0.62 X2+ 1.42 X3+ 2.03 X4 <= 16000
+  0.43 X1 + 0.69 X2 + 0.33 X3 + 0.2 X4 + 0.036 WM <= 30000
+   WM <= 80000
+ 15 X1 + 16 X2 + 9 X3 + 9 X4 - WM - WP <= 8000
+   X1 + X2 - X3 - X4 >= 0
+ END
+terse
+go
+! The objective should have been 186190.97
+pause Hit CR
+para 3 0
+! The RHS values should have been:
+ ! 20686.5, 10880, 8308.57, 5428.57, 3536.84, 209.998, 0
+pause Hit CR
+!
+! Try parametrics on a problem with subs.
+!
+ MAX     E1 + E2 + E3 + E4 + E5 + E6 + E7
+ SUBJECT TO
+        2) - E1 + 20 C + 8 D >=   25
+        3) - E2 + 10 A + 10 B + 6 E >=   40
+        4) - E3 + 4 A + 30 B + 5 E >=   60
+        5) - E4 + 50 A + 5 B + 10 E >=   120
+        6) - E5 + 5 A + 12 B + 11 E >=   40
+        7) - E6 + 5 C + 6 D + 4 E >=   11
+        8) - E7 + 3 C + 10 D + 2 A >=   15
+        9)   C + D + A + B + E <=   11
+END
+    SUB E1       35.00
+    SUB E2       30.00
+    SUB E3       60.00
+    SUB E4       20.00
+    SUB E5       40.00
+    SUB E6       14.00
+    SUB E7       40.00
+terse
+go
+para 9 0
+!  The successive rhs values should have been: 10.0909, 9.1855,
+! 8.19764, 8.07061, 6.79728, 6.51664, 6.32705.
+PAUSE  HIT CR
+!
+!  Test parametrics on a problem  with an artificial in the basis
+ MAX     6 X1 + X2
+ SUBJECT TO
+        2)   X2 <=   6
+        3)   X1 + 2 X2 <=   14
+        4)   X1 + X2 <=   9
+        5)   2 X1 + X2 + D <=   14
+        6)   10 X1 + X2 + D <=   60
+        7)   X1 + X2 >=   2
+        8)   D =    0
+ END  
+ GO
+ PARA 8 100
+! Successive RHS's should be:
+! 2.5, 10.0, and 12.0
+PAUSE  HIT CR
+! Check the RANGE command on this
+go
+range
+! The allowable increase on row 8 should be either 0 or 2.5
+pause hit cr
+! Try another PARA...
+ MIN     100 XMON + 100 XTUE + 100 XWED + 100 XTHU + 100 XFRI
+       + 100 XSAT + 100 XSUN
+ SUBJECT TO          
+ SUN)                XWED + XTHU + XFRI + XSAT + XSUN >=   18
+ MON)  XMON               + XTHU + XFRI + XSAT + XSUN >=   16
+ TUE)  XMON + XTUE               + XFRI + XSAT + XSUN >=   15
+ WED)  XMON + XTUE + XWED               + XSAT + XSUN >=   16
+ THU)  XMON + XTUE + XWED + XTHU               + XSUN >=   19
+ FRI)  XMON + XTUE + XWED + XTHU + XFRI               >=   14
+ SAT)         XTUE + XWED + XTHU + XFRI + XSAT        >=   12
+ END
+terse
+go
+para sun 99
+! One of the points should have been RHS VAL= 24, OBJ VAL= 2400
+pause Hit CR
+! Try RANGE on problem with fixed variables 
+ MIN   - 21.96349 X02 - 7 X05
+ SUBJECT TO
+        2) - 10 X05 <=   7
+        3) - 5 X02 - 8 X05 + 3 X03 - 2 X04 <=   3
+        4)   4 X05 + 8 X01 <=   7
+        5)   5 X02 - 4 X03 - 8 X04 - 6 X01 <=   4
+        6) - X05 - 5 X03 + 9 X04 <=   3
+ END
+ SLB      X02        2.39270
+ SUB      X02       10.00000
+ SUB      X05        1.75000
+ SLB      X03        4.45000
+ SUB      X03        4.45000
+ SLB      X04        3.00000
+ SUB      X04        3.00000
+ SUB      X01        0.00000
+go
+range
+! Allowable increase on X02 should have been +21.96349
+!  No INCREASE/DECREASE should have been negative
+pause HIT CR
+ ! Try RANGE on a problem with a free variable
+ MAX X1 + 2 X2 + 3 X3 + 4 X4 + 5 X5+ 6 X6+ 7 X7+ 8 X8
+      - 30 F
+ SUBJECT TO
+  2) - X1 - X2 - X3 - X4 - X5 - X6 + X7 + X8 - F<= - 9
+  3)   0.5 X4 - F <=   1000
+  4)   2 X1 + 3 X2 + 4 X3 + 5 X4 + 6 X5 + 7 X6 =    5000
+ END
+ FREE        F
+go
+range
+! Allowable increase on F should have been 22; decrease= infinity
+pause HIT CR
+!
+!  This problem tends to cause cycling.
+!
+ MIN   - 2 X4 - 3 X5 + X6 + 12 X7
+ SUBJECT TO
+        2) - 2 X4 - 9 X5 + X6 + 9 X7 + X1 =    0
+        3)   0.33333 X4 + X5 - 0.33333 X6 - 2 X7 + X2 =    0
+        4)   2 X4 + 3 X5 - X6 - 12 X7 + X3 =    2
+ END  
+!
+!  The answer should be - 2:
+terse
+go 30
+PAUSE  HIT CR
+! Try the Lexico-goal programming
+ TITLE  GLEXAM:  ILLUSTRATES THE GLEX COMMAND
+ MIN     COST - EXTRA
+ SUBJECT TO
+      MON)   M + R + F + S + N - XM >=   3
+      TUE)   M + F + S + N + T - XT >=   3
+      WED)   M + S + N + T + W - XW >=   8
+      THU)   M + R + N + T + W - XR >=   8
+      FRI)   M + R + F + T + W - XF >=   8
+      SAT)   R + F + S + T + W - XS >=   3
+      SUN)   R + F + S + N + W - XN >=   3
+       XM)   XM <=   1
+       XT)   XT <=   1
+       XW)   XW <=   1
+       XR)   XR <=   1
+       XF)   XF <=   1
+       XS)   XS <=   1
+       XN)   XN <=   1
+     COST)   COST - M - R - F - S - N - T - W =    0
+    EXTRA)   EXTRA - XM - XT - XW - XR - XF - XS - XN =    0
+ END
+ FREE     COST
+ FREE    EXTRA
+glex
+nonz
+cpri n p : n = 'COST'
+cpri n p : n = 'EXTRA'
+! Should have  COST about 8.0 and EXTRA about 4.0
+pause Hit Cr
+!
+terse
+! The next one tests roundoff error handling
+ MAX      A1 -  A2 +  B1 -  B2 +  C1 -  C2
+ SUBJECT TO
+  2)   5 A1 - 5 A2 + 650 B1 - 650 B2 + 99800 C1 - 99800 C2
+      =    890
+ 3)   6.5 A1 - 6.5 A2 + 998 B1 - 998 B2 + 172600 C1 - 172600 C2
+      =    1300
+ 4)   9.98 A1 - 9.98 A2 + 1726 B1 - 1726 B2 + 322500 C1
+      - 322500 C2 =    2153
+ END  
+!
+go
+nonz
+!
+! The answers should be (about)
+!  A2 = 65.7259
+!  B1 = 3.015113
+!  C2 = .00742679
+PAUSE  HIT CR
+!
+!  Now try a poorly scaled problem:
+terse
+max 600000f+2000000m + 1.07s4
+st
+1000000f + 800000m + s1 = 2000000
+700000f - 500000m - 1.07s1 + s2 = 500000
+-1800000f + 200000m - 1.07s2 + s3 = 400000
+-400000f + 700000m - 1.07s3 + s4 = 380000
+f < 1
+m < 1
+end
+go
+nonz
+! This poorly scaled problem should have had a solution with value
+! of 5605072.102; S4= 2808478.6; S3 = 2549980; S2=514000;S1=200000
+PAUSE  HIT CR
+! Test a problem with linearly dependent rows
+MAX Z ST
+-.3333333 Z + X = 0
+-.6666667 Z + Y = 0
+- Z + X + Y = 0
+Z < 1 END
+go
+pause Objective value should have been 1.
+! 
+MAX     X
+ SUBJECT TO
+    0.00001 X + 8000 S =  - 0.00008
+    X =    1
+ END
+!
+go
+nonz
+pause The solution should have been 1.0
+! And another poorly scaled model
+  MIN     ULW1
+  SUBJECT TO
+         2)   ULW1 + S2 =    10
+         3)   ULW1 + 999999 Y1 =    10
+         4)   Y1 + S4 =    0
+  END
+go
+pause Objective should have been 10
+
+!  NOW TEST THE IP CAPABILITIES
+!
+ MAX     2.6 X + 3 Y
+ SUBJECT TO
+    2)    4.1 X + 5 Y <=   9
+    3)     X >=   0.4
+ END  
+ INTEGER-VARIABLES=       2
+GO
+NONZ
+PAUSE  THE IP VALUE SHOULD HAVE BEEN 2.6
+! ANOTHER SIMPLE IP
+ MAX     21 X1 + 22 X2 + 16 X3 + 31 X4 + 15 X5 + 12 X6
+ST
+        4 X1 + 7 X2 + 4 X3 + 8 X4 + 4 X5 + 2 X6 <=   16
+ END  
+ INTEGER-VARIABLES=       1
+TERSE
+GO
+INTE 6
+!
+!
+GO 200
+!  THE LAST SOLUTION SHOULD HAVE OBJECTIVE = 68
+PAUSE HIT CR
+!
+inte 0
+go
+!  The answer should be 72.25
+!
+PAUSE HIT CR
+!! ANOTHER TRIVIAL IP
+MAX X + Y + Z ST X + Z < 1
+X+ Y < 1 Y + Z < 1 END
+INTE 3
+GO
+NONZ
+PAUSE IT SHOULD HAVE FOUND AN OPTIMUM OF 1, IN ONE OR FEWER BRANCHES.
+!
+!  This problem tests a mixture of 0/1 and general IP vars.
+max x + 2y st x+y < 10 end
+gin 2
+go
+inte y
+go
+Pause Obj should have been 11.  HIT CR
+! Here is a slightly oddly formulated IP
+batch
+ MIN 21.35 A1+ 3.75 A2+ 18.8 A3 + 6.3 A4 + 1.15 A5 + 6.65 B1
+ + 11 B3 + 7.2 B4 + 24.15 C1 + 11 C2 + 1.65 C4 + 1.4 D1 + 13 D2
+ + 17 D3 + 9.3 D4 + 2.9 D5 + 16.1 E1 + 16.5 E2 + 13 E3
+ + 1.95 E4 + 9.1 F1 + 23.75 F2 + 13.4 F3 + 15.75 G1 + 6.75 G2
+ + 3 A +  B + 2 C +  D +  E + 2 F + 2 G
+ SUBJECT TO
+        2)    A1 +  B1 +  C1 +  D1 +  E1 +  F1 +  G1 =    1
+        3)    A2 +  C2 +  D2 +  E2 +  F2 +  G2 +  B2 =    1
+        4)    A3 +  B3 +  D3 +  E3 +  F3 +  C3 +  G3 =    1
+        5)    A4 +  B4 +  C4 +  D4 +  E4 +  F4 +  G4 =    1
+        6)    A5 +  D5 +  B5 +  C5 +  E5 +  F5 +  G5 =    1
+        7)    B2 =    0
+        8)    B5 =    0
+        9)    C3 =    0
+       10)    C5 =    0
+       11)    E5 =    0
+       12)    F4 =    0
+       13)    F5 =    0
+       14)    G3 =    0
+       15)    G4 =    0
+       16)    G5 =    0
+       17) - 0.2 A1 - 0.2 A2 - 0.2 A3 - 0.2 A4 - 0.2 A5 +  A >=   0
+       18) - 0.2 B1 - 0.2 B3 - 0.2 B4 - 0.2 B2 - 0.2 B5 +  B >=   0
+       19) - 0.2 C1 - 0.2 C2 - 0.2 C4 - 0.2 C3 - 0.2 C5 +  C >=   0
+       20) - 0.2 D1 - 0.2 D2 - 0.2 D3 - 0.2 D4 - 0.2 D5 +  D >=   0
+       21) - 0.2 E1 - 0.2 E2 - 0.2 E3 - 0.2 E4 - 0.2 E5 +  E >=   0
+       22) - 0.2 F1 - 0.2 F2 - 0.2 F3 - 0.2 F4 - 0.2 F5 +  F >=   0
+       23) - 0.2 G1 - 0.2 G2 - 0.2 G3 - 0.2 G4 - 0.2 G5 +  G >=   0
+       24)    A +  B +  C +  D +  E +  F +  G =    3
+ END  
+ INTEGER-VARIABLES=      42
+terse
+! Turn it back to interactive mode
+BATCH
+go
+!  The last IP  should be 26.25 with A =D= E = 1
+!
+PAUSE HIT CR
+!  The following IP with no explicit constraints should have
+!    an optimum solution with value = 21.
+!
+MAX -AB+AC+3AD+2AE-AF
+     +4BC+9BD+BE+BF
+        -CD-2CE-4CF
+           -4DE-8DF
+               -EF
+ST
+END
+INTE 15
+!  The solution should be 21
+terse
+go
+!
+PAUSE HIT CR
+ MIN     D
+ SUBJECT TO
+2)   D + 1.1 X01 + 4 X02 + X03 + 3.2 X04 + 2.7 X05 + 3.8 X06
+ + 2.1 X07 + 1.4 X08 + 1.6 X09 + 3.1 X10 + 1.9 X11 + 3.5 X12
+      =    14.7
+ END
+inte x01
+inte x02
+inte x03
+inte x04
+inte x05
+inte x06
+inte x07
+inte x08
+inte x09
+inte x10
+inte x11
+inte x12
+! Check the BIP command
+! No solution greater than 0.5 should be found
+bip .5
+GO 2500
+!  It should have gotten an obj value of zero.
+PAUSE HIT CR
+!
+!  TEST A GENERAL IP WITH SUBS AND SLBS
+MIN A+B+C+D+E
+ST
+A+E >5
+A+B>7
+B+C>5
+C+D>5
+D+E >5
+END
+SLB A 2
+SUB A 6
+SLB B 3
+SUB B 7
+SLB C 0
+SUB C 4
+GIN 5
+GO
+NONZ
+!
+!  THE SOLUTION SHOULD HAVE BEEN 14 WITH EITHER:
+!    A=4, B=3, C=2, D=3, E=2
+! OR A=4, B=3, C=2, D=4, E=1
+! OR A=4, B=4, C=1, D=4, E=1.
+PAUSE HIT CR
+!  TEST THE TITAN COMMAND
+MAX X
+ SUBJECT TO
+        2)   2 X >=   10
+        3)   4 X + 4 Y <=   80
+        4)   3 Y + 3 Z >=   60
+ END  
+TITAN
+!  The objective should be 20.
+go
+!
+PAUSE HIT CR
+MIN 100 Y22 + 5 X12 + 3 I13
+ST
+X11 - I11 = 500
+X12 + I11 - I12 = 20
+I12 + X13 = 50
+X21 - I21 = 73
+I21 + X22 - I22 = 57
+I22 + X23 = 100
+X11 + X21 < 600
+X12 + X22 < 200
+X13 + X23 < 400
+-1000 Y11 + X11 < 0
+-1000Y12 + X12 < 0
+-1000 Y13 + X13 < 0
+-1000 Y21 + X21 < 0
+-1000 Y22 + X22 < 0
+X23 - 1000 Y23 < 0
+END
+INTE Y11
+INTE Y12
+INTE Y13
+INTE Y21
+INTE Y22
+TERSE
+TITAN
+GO
+PAUSE The solution should have been 100.
+! Here is a QP problem.
+!
+ MIN      X +  Y +  Z +  RETURN +  UNITY +  XFRAC
+      +  YFRAC +  ZFRAC
+ SUBJECT TO
+    2)    6 X + 2 Y -  Z - 1.3 RETURN +  UNITY
+      +  XFRAC >=   0
+    3)    2 X + 4 Y - 0.8 Z - 1.2 RETURN +  UNITY
+      +  YFRAC >=   0
+    4)  -  X - 0.8 Y + 2 Z - 1.08 RETURN +  UNITY
+      +  ZFRAC >=   0
+    5)    1.3 X + 1.2 Y + 1.08 Z >=   1.1
+    6)     X +  Y +  Z =    1
+    7)     X <=   0.75
+    8)     Y <=   0.75
+    9)     Z <=   0.75
+ END  
+QCP 5
+!
+!   The obj value   should be 0.41737488
+!
+GO
+para 5 9
+! The successive RHS values should be 1.1441, 1.26947, 1.275
+!
+!  The submatrix should be positive definite.
+posd
+PAUSE  HIT CR
+!
+!  HERE IS ANOTHER QP...
+ MIN     X + Y + Z + RET + UNITY + FRACX + FRACY + FRACZ
+ SUBJECT TO
+        2)   0.02162 X + 0.02481 Y + 0.02615 Z - 0.089 RET + UNITY
+      + FRACX >=   0
+        3)   0.02481 X + 0.11678 Y + 0.11085 Z - 0.21 RET + UNITY
+      + FRACY >=   0
+        4)   0.02615 X + 0.11085 Y + 0.18845 Z - 0.23 RET + UNITY
+      + FRACZ >=   0
+        5)   0.089 X + 0.21 Y + 0.23 Z >=   0.15
+        6)   X + Y + Z =    1
+        7)   X <=   0.75
+        8)   Y <=   0.75
+        9)   Z <=   0.75
+ END  
+ QCP=    5
+!  THE SOLUTION SHOULD BE .231053326E-01
+GO
+!
+PARA 5 99
+! RHS VALS SHOULD HAVE BEEN .15, .214885, .215, .215, .225, 99
+PAUSE  HIT CR
+! THIS ONE IS A QUADRATIC PROGRAM WITH FREE VARIABLES
+ MIN     B7 + B8 + C7 + C8
+ SUBJECT TO
+        2)   5087.27832 B7 + 612.85522 B8 - C7 =    155650.1875
+        3)   612.85522 B7 + 140.68985 B8 - C8 =    33532.5
+       20)   B7 >=   0
+       21)   B8 >=   0
+ END
+ QCP=    4
+TERSE
+GO
+PAUSE  THE OBJECTIVE SHOULD HAVE BEEN -4015106.***
+!
+!  Here is a slightly bigger QP with free variables
+!
+bat
+MIN  
+   B1+B2+B3+B4+B5+B6+B7+B8+B9
+   +C1+C2+C3+C4+C5+C6+C7+C8+C9
+SUBJECT TO
+ 2)    0.00317B1   +0.00898B2   +0.01530B3   +0.02165B4
+   +0.02799B5   +0.03434B6   +0.04069B7   +0.04703B8
+   +0.05338B9
+-C1
+=   2.40100
+ 3)    0.00898B1   +0.02937B2   +0.05531B3   +0.08225B4
+   +0.10925B5   +0.13625B6   +0.16326B7   +0.19026B8
+   +0.21726B9
+-C2
+=   9.34536
+ 4)    0.01530B1   +0.05531B2   +0.11627B3   +0.18611B4
+   +0.25755B5   +0.32909B6   +0.40063B7   +0.47217B8
+   +0.54371B9
+-C3
+=  22.07603
+ 5)    0.02165B1   +0.08225B2   +0.18611B3   +0.32038B4
+   +0.46638B5   +0.61447B6   +0.76272B7   +0.91097B8
+   +1.05922B9
+-C4
+=  40.46468
+ 6)    0.02799B1   +0.10925B2   +0.25755B3   +0.46638B4
+   +0.71212B5   +0.97101B6   +1.23225B7   +1.49369B8
+   +1.75513B9
+-C5
+=  63.28664
+ 7)    0.03434B1   +0.13625B2   +0.32909B3   +0.61447B4
+   +0.97101B5   +1.36600B6   +1.77381B7   +2.18393B8
+   +2.59424B9
+-C6
+=  88.95792
+ 8)    0.04069B1   +0.16326B2   +0.40063B3   +0.76272B4
+   +1.23225B5   +1.77381B6   +2.35050B7   +2.93825B8
+   +3.52801B9
+-C7
+=  116.16274
+     0.04703B1   +0.19026B2   +0.47217B3   +0.91097B4
+   +1.49369B5   +2.18393B6   +2.93825B7   +3.72121B8
+   +4.51279B9
+-C8
+=  144.07184
+10)    0.05338B1   +0.21726B2   +0.54371B3   +1.05922B4
+   +1.75513B5   +2.59424B6   +3.52801B7   +4.51279B8
+   +5.51871B9
+-C9
+=  172.26166
+  B1>=0
+  B2>=0
+  B3>=0
+  B4>=0
+  B5>=0
+  B6>=0
+  B7>=0
+  B8>=0
+  B9>=0
+END
+QCP 11 
+bat
+go
+!  Obj val should have been -2930.09
+!
+PAUSE HIT CR
+ ! A QP with simple upper bounds
+ MIN     ATT + GMC + USX + BUDG + RETR
+ SUBJECT TO
+        2)   0.02162 ATT + 0.02481 GMC + 0.02615 USX + BUDG
+      - 1.089 RETR >=   0
+        3)   0.02481 ATT + 0.11678 GMC + 0.11085 USX + BUDG
+      - 1.21 RETR >=   0
+        4)   0.02615 ATT + 0.11085 GMC + 0.18845 USX + BUDG
+      - 1.23 RETR >=   0
+        5)   ATT + GMC + USX =    1
+        6)   1.089 ATT + 1.21 GMC + 1.23 USX >=   1.015
+ END
+ QCP=    5
+ SUB      ATT         .60000
+ SUB      GMC         .60000
+ SUB      USX         .60000
+ FREE     BUDG
+go
+ !  The answer should have been .1917368E-01
+pause Hit CR
+!  Still another little QP
+ MIN     A + B + C + BUDGET + RETURN + BUDGE2 + RETUR2 + AFRAC
+      + BFRAC + CFRAC
+ SUBJECT TO
+        A)   83.94 A + 154.5 B - 61.96 C + BUDGET + 2.59 RETURN
+      - BUDGE2 - 2.59 RETUR2 + AFRAC >=   0
+        B)   154.5 A + 380.04 B - 145.81 C + BUDGET + 7.66 RETURN
+      - BUDGE2 - 7.66 RETUR2 + BFRAC >=   0
+        C) - 61.96 A - 145.81 B + 138.27 C + BUDGET - 13.36 RETURN
+      - BUDGE2 + 13.36 RETUR2 + CFRAC >=   0
+   BUDGET)   A + B + C <=   1
+   RETURN)   2.59 A + 7.66 B - 13.36 C <=   3.79
+   BUDGE2)   A + B + C >=   1
+   RETUR2)   2.59 A + 7.66 B - 13.36 C >=   2.79
+    AFRAC)   A <=   1
+    BFRAC)   B <=   1
+    CFRAC)   C <=   1
+ END
+ QCP=    5
+go
+Pause Answer should have been 44.87402  (HIT CR)
+! Exercise the MPS interface
+max 20 a + 30 c
+st
+a + 2c < 120
+end
+sub a 60
+sub c 50
+smps JUNK
+rmps JUNK
+max
+terse
+! The obj val should be 2100
+go
+!
+! Check the ALTER NAME command
+alter 2 name
+ROW2
+!  Check the save and retrieve commands
+save junk
+retr junk
+! check alter again
+alter  row2 rhs
+121
+go
+!  The obj should have been 2115
+pause Hit CR
+!  Check if TIME command works
+TIME
+PAUSE Hit CR
+!
+! Test the DEBUG command on an infeasible model
+ max x st x < 1 x > 2  x > 3 end
+go
+debug
+! Should have said row 2 is SUFFICIENT, 3 or 4 is NECESSARY.
+pause Hit CR
+go
+verb
+debug
+! In Verbose mode it should have displayed the full rows;
+pause Hit CR
+terse
+! Test DEBUG on an unbounded model
+  MAX     5 Y1 + 4 Y2 - 16 Y3 - 9 Y4
+  SUBJECT TO
+         2)   Y1 - 3 Y3 - Y4 <=   1
+         3)   Y2 - Y3 - 2 Y4 <=   1
+  END
+go
+debug
+! Should have listed Y1 and Y2 as SUFFICIENT,
+! Either Y3 or Y4 as NECESSARY
+pause Hit CR
+! Test the TITLE command
+TITLE THE NAME OF THIS PROBLEM IS TESTPROB
+! Now display back the title:
+TITLE
+! It should have said:
+!TITLE THE NAME OF THIS PROBLEM IS TESTPROB
+pause Hit CR
+!
+!  Test the MPS interface with SLBs, SUBs, and RANGES
+!  This part requires certain files to exist.
+RMPS lpmps1
+MIN
+terse
+GO
+pause Hit CR
+! Save it and try again
+SMPS junk
+RMPS junk
+ MIN
+ GO
+! The answer should have been 296.2166
+!
+!
+PAUSE HIT CR
+!
+! It should fail gracefully trying to retrieve nonexistent files:
+retr nonxst
+! It should complain if we try to take while already in take mode:
+take nonxst
+PAUSE HIT CR
+!
+bat
+LEAVE
+

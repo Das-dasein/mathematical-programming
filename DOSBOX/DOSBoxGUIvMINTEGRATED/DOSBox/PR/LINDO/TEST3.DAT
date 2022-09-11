@@ -1,0 +1,27 @@
+bat
+!
+! A 3 warehouse, 4 customer transportation model:
+!
+! XWH<i>C<j> = amount shipped from warehouse <i> to customer <j>
+!
+ MIN     6 XWH1C1 + 2 XWH1C2 + 6 XWH1C3 + 7 XWH1C4 
+      +  4 XWH2C1 + 9 XWH2C2 + 5 XWH2C3 + 3 XWH2C4
+      +  8 XWH3C1 + 8 XWH3C2 +   XWH3C3 + 5 XWH3C4
+ SUBJECT TO
+!
+!  Demand constraints:
+ C1)  XWH1C1 + XWH2C1 + XWH3C1 >=   15
+ C2)  XWH1C2 + XWH2C2 + XWH3C2 >=   17
+ C3)  XWH1C3 + XWH2C3 + XWH3C3 >=   22
+ C4)  XWH1C4 + XWH2C4 + XWH3C4 >=   12
+!
+!  Supply constraints:
+ WH1)  XWH1C1 + XWH1C2 + XWH1C3 + XWH1C4 <=   30
+ WH2)  XWH2C1 + XWH2C2 + XWH2C3 + XWH2C4 <=   25
+ WH3)  XWH3C1 + XWH3C2 + XWH3C3 + XWH3C4 <=   21
+ END
+! Type "GO" to solve the model. The objective should be 161.
+ bat
+ leave
+ 
+

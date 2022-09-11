@@ -1,0 +1,32 @@
+! Objective = 84.9316
+!
+!  Multiechelon EOQ model a` la Maxwell and Muckstadt
+model
+min = 10/rm1 + 6/pa10 + 2 / pa20 + 1/ pa30
++ 3/ pb10 + 4/pa40 + 11/rm2 + 7/pc10 + 13/pc20
++ 6/ pc30 + 1/rm3 + 12/sd10 + 7/sd200 + 9/pa200
++ 4/adkit + 1/sd450 + 14 /pc200
++ rm1 + pa10 + pa20 + pa30 + pa40
++ pb10 + rm2 + pc10 + pc20 + pc30 + rm3 + sd10 + sd200
++ pa200 + adkit + sd450 + pc200;
+rm1 > pa10;
+rm1 > pb10;
+pa10 > pa20;
+pa20 > pa30;
+pa30 > pa40;
+pb10 > pc20;
+pb10 > pa40;
+pa40 > pa200;
+pa40 > adkit;
+pa40 > sd10;
+rm2 > pc10;
+pc10 > pc20;
+pc20 > pc30;
+pc30 > pc200;
+pc30 > sd10;
+rm3 > sd10;
+sd10 > adkit ;
+sd10 > sd200;
+sd200> sd450;
+end
+

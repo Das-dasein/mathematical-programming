@@ -1,0 +1,24 @@
+BAT
+!  A shipping company wants to load a shipping container to maxmimize
+!  the freight charges it can bill.  There is  a cubic space constraint
+!  of 1000 sq ft, and a weight limit of 1200 pounds.
+!
+!    X<i> = 1 if parcel <i> in included in the container, else 0.
+!  
+MAX 77 X1 + 6 X2 + 3 X3 + 6 X4 + 33 X5 + 13 X6 + 110 X7 + 21 X8 + 47 X9
+!
+SUBJECT TO
+!
+SPACE)  774 X1 + 76 X2 +  22 X3 + 42 X4 + 21 X5 + 760 X6
+      + 818 X7 + 62 X8 + 785 X9                          <=   1000
+WEIGHT)  67 X1 + 27 X2 + 794 X3 + 53 X4 + 234 X5 + 32 X6
+      + 792 X7 + 97 X8 + 435 X9                          <=   1200
+END  
+INT 9
+!
+! Type "GO" to solve the model. The best integer solution should have
+! an objective value of 170. To view the best solution type "SOLU"
+! after optimization has finished.
+BAT
+LEAVE
+

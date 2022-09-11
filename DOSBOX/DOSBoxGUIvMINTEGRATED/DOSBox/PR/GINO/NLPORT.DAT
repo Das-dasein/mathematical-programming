@@ -1,0 +1,22 @@
+!
+! A portfolio model.
+model
+!
+! minimize the variance on return
+min= 3*x^2 + 2*x*y    -   x*z
+          +  2*y^2 - .8*y*z
+                   + z^2;
+!
+! subject to receiving a return of at least 15 percent
+1.3*x + 1.2*y + 1.08*z > 1.15;
+!
+! invest all funds
+x+y+z = 1;
+!
+! but don't overinvest in any given stock
+x<.75;
+y<.75;
+z<.75;
+end
+
+

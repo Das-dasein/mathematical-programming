@@ -1,0 +1,28 @@
+! Taken from BYTE Magazine, May 1984,  p. 146
+Model
+! Conversions
+  DTOR = 2* 3.1415926/360; ! Degrees to radians
+! Input data
+DBETA = 55;
+ BETA = DBETA * DTOR; ! Angle beta is 55 degrees.
+ AREA = 7 ; ! Area = 7;
+ C = 5 ; ! Side C = 5
+!
+  ALPHA+ BETA+ GAMMA= 3.1415926; !Interior angles of triangle
+ A^2 = B^2 +C^2 - 2* B* C* SIN( 3.1415926/2 - ALPHA);
+                           !  Cosine theorem 
+ A/ SIN( ALPHA) = B/ SIN( BETA) ; ! Sine theorem
+ P = A + B + C;  ! Perimeter
+ AREA = A* B * SIN( GAMMA)/2; ! Area
+!  output conversions:
+    DALPHA = ALPHA/DTOR;
+   DGAMMA = GAMMA/ DTOR;
+  
+! Solution:
+!   DALPHA = 42.652161 Degrees
+!   DGAMMA = 82.347839  degrees
+!   A = 3.4181688
+!   B = 4.1325618
+!   P = 12.550731
+END
+

@@ -1,0 +1,24 @@
+bat
+! A small staff scheduling model:
+!
+! Each employee works a 5 day day shift with two days off.
+! A worker can be started any day of the week.  A worker earns
+! $100 per week.
+!
+! X<day> = Number of  of employees we start on day <day>
+! 
+ MIN     100 XMON + 100 XTUE + 100 XWED + 100 XTHU + 100 XFRI
+       + 100 XSAT + 100 XSUN
+ SUBJECT TO          
+ SUN)                XWED + XTHU + XFRI + XSAT + XSUN >=   18
+ MON)  XMON               + XTHU + XFRI + XSAT + XSUN >=   16
+ TUE)  XMON + XTUE               + XFRI + XSAT + XSUN >=   15
+ WED)  XMON + XTUE + XWED               + XSAT + XSUN >=   16
+ THU)  XMON + XTUE + XWED + XTHU               + XSUN >=   19
+ FRI)  XMON + XTUE + XWED + XTHU + XFRI               >=   14
+ SAT)         XTUE + XWED + XTHU + XFRI + XSAT        >=   12
+ END
+! Type "GO" to solve the model. The objective should be $2200.
+ bat
+ leave
+
